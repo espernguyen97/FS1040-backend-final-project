@@ -1,0 +1,14 @@
+stages:
+    - deploy
+
+gcp_deploy:
+    stage: deploy
+    only:
+        - master
+    image: google/cloud-sdk # let's grab an existing image that has the cloud sdk
+    before_script:
+        - echo $SERVICE_KEY_FILE > /tmp/$CI_PIPELINE_ID.json
+        - gcloud auth activate-service-account --key-file /tmp/$CI_PIPELINE_ID.json # we need to authenticate
+    script:
+        - gcloud --project $PROJECT_ID run deploy $SERVICE_NAME --image=gcr.io/$PROJECT_ID/$SERVICE_NAME --region=region=us-central1 --allow-unauthenticated --platform=managed # run the deploy command
+        - rm /tmp/$CI_PIPELINE_ID.json # let's clean up

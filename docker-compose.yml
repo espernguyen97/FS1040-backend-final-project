@@ -1,0 +1,24 @@
+  version: '3.7'
+
+services:
+      app:
+        build: 
+          context: .
+          dockerfile: Dockerfile
+        ports:
+          - "5432:8080"
+        volumes:
+          - .:/sequelize
+        depends_on: 
+          - db
+
+      db:
+        image: mysql:5.7
+        environment:
+            MYSQL_ROOT_PASSWORD: "Hi123456"
+            MYSQL_USER: "root"
+            MYSQL_PASSWORD: "password"
+            MYSQL_DATABASE: "db"
+        ports:
+          - "5432:8080"
+          
